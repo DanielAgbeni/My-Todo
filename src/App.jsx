@@ -1,53 +1,68 @@
 /** @format */
 import { Task } from './components/Task'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Header from './components/Header'
 import Form from './components/Form'
 
 function App() {
 	const [showTask, setShowTask] = useState(false)
-	const [tasks, newTask] = useState([
-		// {
-		// 	id: crypto.randomUUID(),
-		// 	text: 'Eat',
-		// 	day: 'Feb 5th at 2:30pm',
-		// 	reminder: true,
-		// },
-		// {
-		// 	id: crypto.randomUUID(),
-		// 	text: 'Meeting',
-		// 	day: 'Feb 17th at 4:30pm',
-		// 	reminder: true,
-		// },
-		// {
-		// 	id: crypto.randomUUID(),
-		// 	text: 'Read',
-		// 	day: 'Feb 15th at 6:30pm',
-		// 	reminder: false,
-		// },
-		// {
-		// 	id: crypto.randomUUID(),
-		// 	text: 'Sleep',
-		// 	day: 'Feb 8th at 2:30pm',
-		// 	reminder: true,
-		// },
-	])
+	const [tasks, newTask] = useState([])
+	useEffect(() => {
+		const getTasks = async () => {
+			const serverTask = await fetchTasks()
+			newTask(serverTask)
+		}
+		getTasks()
+	}, [])
 
-	const addTask = (task) => {
-		console.log(task)
-		const id = crypto.randomUUID()
-		const SetTask = { id, ...task }
-		newTask([...tasks, SetTask])
+	// Fetch Data from db.json
+	const fetchTasks = async () => {
+		const res = await fetch('http://localhost:5000/task')
+		const data = await res.json()
+		return data
+	}
+	// Fetch single Data from db.json
+	const fetchTask = async (id) => {
+		const res = await fetch(`http://localhost:5000/task/${id}`)
+		const data = await res.json()
+
+		return data
 	}
 
-	const selectTask = (id) => {
+	const addTask = async (task) => {
+		const res = await fetch('http://localhost:5000/task', {
+			method: 'POST',
+			headers: {
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify(task),
+		})
+		const data = await res.json()
+		// const id = crypto.randomUUID()
+		// const SetTask = { id, ...task }
+		// newTask([...tasks, SetTask])
+		newTask([...tasks, data])
+	}
+
+	const selectTask = async (id) => {
+		const toggleTask = await fetchTask(id)
+		const upTask = { ...toggleTask, reminder: !toggleTask.reminder }
+		const res = await fetch(`http://localhost:5000/task/${id}`, {
+			method: 'PUT',
+			headers: {
+				'Content-type': 'application/json',
+			},
+			body: JSON.stringify(upTask),
+		})
+		const data = await res.json()
 		newTask(
 			tasks.map((task) =>
-				task.id === id ? { ...task, reminder: !task.reminder } : task
+				task.id === id ? { ...task, reminder: data.reminder } : task
 			)
 		)
 	}
-	const deleteTask = (id) => {
+	const deleteTask = async (id) => {
+		await fetch(`http://localhost:5000/task/${id}`, { method: 'DELETE' })
 		newTask((currentTask) => currentTask.filter((tasks) => tasks.id !== id))
 	}
 	return (
