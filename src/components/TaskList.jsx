@@ -14,9 +14,6 @@ const TaskList = (props) => {
 					style={{
 						color: 'red',
 						cursor: 'pointer',
-						borderRadius: '100%',
-						border: '1px solid black',
-						padding: '1.5px',
 					}}
 					onClick={() => props.deleted(props.task.id)}
 				/>
