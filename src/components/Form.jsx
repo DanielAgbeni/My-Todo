@@ -30,7 +30,7 @@ const Form = ({ onAdd }) => {
 		}
 		onAdd(taskData)
 		if (text === '') return
-		console.log(taskData)
+		// console.log(taskData)
 		setNewTask('')
 		setNewReminder(false)
 		setNewTime('')
