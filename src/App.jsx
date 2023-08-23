@@ -6,6 +6,7 @@ import Header from './components/Header'
 import Form from './components/Form'
 import Footer from './components/Footer'
 import About from './components/About'
+import Time from './Time'
 
 function App() {
 	const [showTask, setShowTask] = useState(false)
@@ -70,6 +71,7 @@ function App() {
 	return (
 		<Router>
 			<div className='container'>
+				<Time />
 				<Header onAdd={() => setShowTask(!showTask)} showAdd={showTask} />
 
 				<Routes>
