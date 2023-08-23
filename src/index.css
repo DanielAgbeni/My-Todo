@@ -82,6 +82,9 @@ body {
 	cursor: pointer;
 	user-select: none;
 }
+.due {
+	background: #f50505;
+}
 
 .task.reminder {
 	border-left: 5px solid green;

@@ -11,10 +11,13 @@ const Time = () => {
 			const hr = now.getHours()
 			const min = now.getMinutes()
 			const sec = now.getSeconds()
+
+			const monthName = now.toLocaleString('default', { month: 'short' })
+			const day = now.getDate()
 			setWatch(
-				`${hr < 10 ? '0' + hr : hr}:${min < 10 ? '0' + min : min}:${
-					sec < 10 ? '0' + sec : sec
-				}`
+				`${monthName} ${day} - ${hr < 10 ? '0' + hr : hr}:${
+					min < 10 ? '0' + min : min
+				}:${sec < 10 ? '0' + sec : sec}`
 			)
 		}, 1000)
 		return () => {
